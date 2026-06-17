@@ -46,13 +46,32 @@ function allProducts() {
 }
 
 function productHref(product) {
-  return product.id === "888" ? "product-detail.html?id=888" : `#product-${product.id}`;
+  if (product.category === "정수기") {
+    if (product.id === "888") return "product-detail.html?id=888";
+    return `product-detail-${product.id}.html?id=${product.id}`;
+  }
+  return `#product-${product.id}`;
+}
+
+function productTitleParts(product) {
+  const model = product.model || "";
+  const escapedModel = model.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const name = model
+    ? product.name.replace(new RegExp(`\\s*${escapedModel}\\s*$`), "").trim()
+    : product.name;
+
+  return {
+    name: name || product.name,
+    model,
+  };
 }
 
 function productCard(product, variant = "best") {
   const original = product.originalPrice
     ? `<small class="original-price">${formatPrice(product.originalPrice)}</small>`
     : "";
+  const title = productTitleParts(product);
+  const model = title.model ? `<span class="product-model">${title.model}</span>` : "";
 
   return `
     <article class="product-card ${variant}">
@@ -60,7 +79,7 @@ function productCard(product, variant = "best") {
         <img src="${product.image}" alt="${product.name}" loading="lazy">
       </a>
       <div class="product-body">
-        <h3>${product.name}</h3>
+        <h3><span class="product-name">${title.name}</span>${model}</h3>
         <div class="product-price">${formatPrice(product.price)}${original}</div>
       </div>
     </article>
