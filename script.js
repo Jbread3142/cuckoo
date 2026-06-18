@@ -46,7 +46,7 @@ function allProducts() {
 }
 
 function productHref(product) {
-  if (product.category === "정수기") {
+  if (product.category === "정수기" || product.category === "공기청정기" || product.category === "비데") {
     if (product.id === "888") return "product-detail.html?id=888";
     return `product-detail-${product.id}.html?id=${product.id}`;
   }
